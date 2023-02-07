@@ -6,6 +6,7 @@ class Square:
         self.row = row
         self.col = col
 
+userInputBoard = [8,0,0,0,0,0,0,0,0,0,1,3,8,6,7,5,4,9,4,7,0,5,0,3,2,6,0,0,0,0,0,5,0,9,8,1,0,6,8,9,0,0,0,0,0,7,0,1,3,4,0,0,2,0,6,0,0,0,7,0,0,0,4,0,0,7,0,0,9,0,0,0,0,3,0,0,8,0,0,1,2]
 board = []
 
 #Pops the whole board array a remakes the board with numbers equal to 0 and sets there row, column, and group information
@@ -56,44 +57,13 @@ def printBoard():
             j+=1
             int+=1
 
-#Sets the board with numbers, runs reset board and print board
+#Sets the board with numbers, runs reset board
 def setBoard():
     resetBoard()
-    userInput = input("Use test case (y/n): ")
-    if(userInput == "y"):
-        testBoard = [8,0,0,0,0,0,0,0,0,0,1,3,8,6,7,5,4,9,4,7,0,5,0,3,2,6,0,0,0,0,0,5,0,9,8,1,0,6,8,9,0,0,0,0,0,7,0,1,3,4,0,0,2,0,6,0,0,0,7,0,0,0,4,0,0,7,0,0,9,0,0,0,0,3,0,0,8,0,0,1,2]
-        i=0
-        while(i<81):
-            board[i].num = testBoard[i]
-            i+=1
-    elif(userInput == "n"):
-        i = 0
-        while(i<81):
-            print(f'\n')
-            enteredNumberTemp = input("Enter Number: ")
-            if(enteredNumberTemp.isdigit()==False):
-                print("INVALID ENTRY. Please enter only numbers 1 - 9 or a 0 for blank")
-            else:
-                enteredNumber = int(enteredNumberTemp)
-                if(enteredNumber > 9 or enteredNumber < 0):
-                    print("INVALID ENTRY. Please enter only numbers 1 - 9 or a 0 for blank")
-                else:
-                    def isNotValid():
-                        j=0
-                        if(i>0):
-                            while(j<i):
-                                if(board[j].row == board[i].row) or (board[j].col == board[i].col) or (board[j].groupNum == board[i].groupNum):
-                                    if(board[j].num == enteredNumber):
-                                        return True
-                                j+=1
-                        return False
-                    
-                    if(enteredNumber!=0 and isNotValid()):
-                        print("INVALID ENTRY. Number would cause board to be unplayable")
-                    else:
-                        board[i].num = enteredNumber
-                        printBoard()
-                        i+=1
+    i=0
+    while(i<81):
+        board[i].num = userInputBoard[i]
+        i+=1
 
 #This function goes through and updates all the possibleNums[] the square is allowed to be
 def updatePossibilities():
@@ -154,18 +124,21 @@ def checkForHasToBe():
         else:
             i+=1
 
-#Runs updatePossibilities, then checkForSolo, and then checkForHasToBe for one solve attempt of the problem
+#Makes one guess and then revaluates the board. Anything not done yet it will guess again
+def bruteForce():
+    for squares in board:
+        if(squares.num == 0):
+            squares.num = squares.possibleNums[0]
+            solve()
+
+#Runs updatePossibilities, then checkForSolo, then checkForHasToBe, then bruteForce, then lastly it will print
 def solve():
     updatePossibilities()
     checkForSolo()
     checkForHasToBe()
+    bruteForce()
     print(f'\n')
-    print(f'\n')
-
-
-#TO DO ------
-#   Create a function to brute force the solution after the solve
+    printBoard()
 
 setBoard()
 solve()
-printBoard()
