@@ -11,13 +11,11 @@ board = []
 
 #Pops the whole board array a remakes the board with numbers equal to 0 and sets there row, column, and group information
 def resetBoard():
-    i=0
-    while(i<len(board)):
+    j=0
+    while(j<len(board)):
         board.pop
-        i+=1
+        j+=1
 
-    for nums in board:
-        nums.pop
     i=0
     groupBaseNum = 1
     setRow = 0
@@ -38,7 +36,7 @@ def resetBoard():
         if(setCol>5):
             setGroup = groupBaseNum+2
 
-        board.append(Square(setGroup,setRow, setCol))
+        board.append(Square(setGroup,setRow,setCol))
         i+=1
         setCol+=1
 
@@ -59,7 +57,6 @@ def printBoard():
 
 #Sets the board with numbers, runs reset board
 def setBoard():
-    resetBoard()
     i=0
     while(i<81):
         board[i].num = userInputBoard[i]
@@ -92,8 +89,8 @@ def checkForSolo():
             board[i].num = board[i].possibleNums[0]
             board[i].possibleNums.pop()
             hasChanged = True
-            updatePossibilities()
         if(hasChanged):
+            updatePossibilities()
             i=0
         else:
             i+=1
@@ -129,10 +126,11 @@ def bruteForce():
     for squares in board:
         if(squares.num == 0):
             squares.num = squares.possibleNums[0]
-            solve()
 
-#Runs updatePossibilities, then checkForSolo, then checkForHasToBe, then bruteForce, then lastly it will print
+#Runs restBoard, setBoard, updatePossibilities, checkForSolo, checkForHasToBe, bruteForce, then lastly it will print
 def solve():
+    resetBoard()
+    setBoard()
     updatePossibilities()
     checkForSolo()
     checkForHasToBe()
@@ -140,5 +138,4 @@ def solve():
     print(f'\n')
     printBoard()
 
-setBoard()
 solve()
